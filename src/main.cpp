@@ -12,6 +12,24 @@ try
         ss >> if_name;
     }
 
+    std::string of_name;
+    {
+        std::stringstream ss { argv[2] };
+        ss >> of_name;
+    }
+
+    size_t bs { 0 };
+    {
+        std::stringstream ss { argv[3] };
+        ss >> bs;
+    }
+
+    size_t count { 0 };
+    {
+        std::stringstream ss { argv[4] };
+        ss >> count;
+    }
+
     return EXIT_SUCCESS;
 }
 catch (std::exception &exc)
