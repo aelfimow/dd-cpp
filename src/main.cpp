@@ -1,41 +1,20 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <stdexcept>
 #include <vector>
+
+#include "argv_parser.h"
 
 
 int main(int argc, char *argv[])
 try
 {
-    if (argc < 5)
-    {
-        throw std::invalid_argument("Usage: dd-cpp if of bs count");
-    }
+    argv_parser ap { argc, argv };
 
-    std::string if_name;
-    {
-        std::stringstream ss { argv[1] };
-        ss >> if_name;
-    }
-
-    std::string of_name;
-    {
-        std::stringstream ss { argv[2] };
-        ss >> of_name;
-    }
-
-    size_t bs { 0 };
-    {
-        std::stringstream ss { argv[3] };
-        ss >> bs;
-    }
-
-    size_t count { 0 };
-    {
-        std::stringstream ss { argv[4] };
-        ss >> count;
-    }
+    auto if_name = ap.if_name();
+    auto of_name = ap.of_name();
+    auto bs = ap.bs();
+    auto count = ap.count();
 
     std::ifstream infile { if_name, std::ifstream::binary };
 
