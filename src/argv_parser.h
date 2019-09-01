@@ -3,7 +3,7 @@
 #else
 #define ARGV_PARSER_H
 
-#include <list>
+#include <vector>
 #include <string>
 
 class argv_parser
@@ -12,8 +12,13 @@ class argv_parser
         explicit argv_parser(int argc, char *argv[]);
         ~argv_parser();
 
+        std::string if_name() const;
+        std::string of_name() const;
+        size_t bs() const;
+        size_t count() const;
+
     private:
-        std::list<std::string> m_argv;
+        std::vector<std::string> m_argv;
 };
 
 #endif
