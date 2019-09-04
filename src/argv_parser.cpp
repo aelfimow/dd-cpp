@@ -46,24 +46,74 @@ std::string argv_parser::if_name() const
 
 std::string argv_parser::of_name() const
 {
+    std::string const keyword { "of=" };
     std::string of_name;
-    std::stringstream ss { m_argv[2] };
-    ss >> of_name;
+
+    for (auto &str: m_argv)
+    {
+        auto pos = str.find(keyword);
+
+        bool const found = (pos == 0);
+
+        if (found)
+        {
+            pos += keyword.length();
+            of_name = str.substr(pos);
+            break;
+        }
+    }
+
     return of_name;
 }
 
 size_t argv_parser::bs() const
 {
+    std::string const keyword { "bs=" };
+    std::string bs_str;
+
+    for (auto &str: m_argv)
+    {
+        auto pos = str.find(keyword);
+
+        bool const found = (pos == 0);
+
+        if (found)
+        {
+            pos += keyword.length();
+            bs_str = str.substr(pos);
+            break;
+        }
+    }
+
     size_t bs { 0 };
-    std::stringstream ss { m_argv[3] };
+    std::stringstream ss { bs_str };
     ss >> bs;
+
     return bs;
 }
 
 size_t argv_parser::count() const
 {
+    std::string const keyword { "count=" };
+    std::string count_str;
+
+    for (auto &str: m_argv)
+    {
+        auto pos = str.find(keyword);
+
+        bool const found = (pos == 0);
+
+        if (found)
+        {
+            pos += keyword.length();
+            count_str = str.substr(pos);
+            break;
+        }
+    }
+
     size_t count { 0 };
-    std::stringstream ss { m_argv[4] };
+    std::stringstream ss { count_str };
     ss >> count;
+
     return count;
 }
