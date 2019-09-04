@@ -36,7 +36,8 @@ std::string argv_parser::if_name() const
         if (found)
         {
             pos += keyword.length();
-            std::string if_name = str.substr(pos);
+            if_name = str.substr(pos);
+            break;
         }
     }
 
