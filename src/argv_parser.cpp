@@ -24,9 +24,22 @@ argv_parser::~argv_parser()
 
 std::string argv_parser::if_name() const
 {
+    std::string const keyword { "if=" };
     std::string if_name;
-    std::stringstream ss { m_argv[1] };
-    ss >> if_name;
+
+    for (auto &str: m_argv)
+    {
+        auto pos = str.find(keyword);
+
+        bool const found = (pos == 0);
+
+        if (found)
+        {
+            pos += keyword.length();
+            std::string if_name = str.substr(pos);
+        }
+    }
+
     return if_name;
 }
 
