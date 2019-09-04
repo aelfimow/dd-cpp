@@ -33,8 +33,9 @@ try
     std::vector<char> buffer(bs);
 
     size_t total_bytes { 0 };
+    size_t bcount { 0 };
 
-    for (size_t i = 0; i < count; ++i)
+    while (bcount < count)
     {
         infile.read(buffer.data(), buffer.size());
 
@@ -55,8 +56,12 @@ try
         {
             break;
         }
+
+        ++bcount;
     }
 
+    std::cout << "Block size: " << bs << std::endl;
+    std::cout << "Block count: " << bcount << std::endl;
     std::cout << "Total bytes: " << total_bytes << std::endl;
 
     return EXIT_SUCCESS;
