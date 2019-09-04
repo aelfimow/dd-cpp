@@ -117,3 +117,24 @@ size_t argv_parser::count() const
 
     return count;
 }
+
+std::string argv_parser::parse(std::string const &keyword) const
+{
+    std::string parsed_str;
+
+    for (auto const &str: m_argv)
+    {
+        auto pos = str.find(keyword);
+
+        bool const found = (pos == 0);
+
+        if (found)
+        {
+            pos += keyword.length();
+            parsed_str = str.substr(pos);
+            break;
+        }
+    }
+
+    return parsed_str;
+}

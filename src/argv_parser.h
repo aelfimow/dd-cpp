@@ -19,6 +19,8 @@ class argv_parser
 
     private:
         std::vector<std::string> m_argv;
+
+        std::string parse(std::string const &keyword) const;
 };
 
 #endif
