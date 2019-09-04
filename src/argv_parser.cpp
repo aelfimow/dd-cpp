@@ -24,98 +24,30 @@ argv_parser::~argv_parser()
 
 std::string argv_parser::if_name() const
 {
-    std::string const keyword { "if=" };
-    std::string if_name;
-
-    for (auto &str: m_argv)
-    {
-        auto pos = str.find(keyword);
-
-        bool const found = (pos == 0);
-
-        if (found)
-        {
-            pos += keyword.length();
-            if_name = str.substr(pos);
-            break;
-        }
-    }
-
-    return if_name;
+    return parse("if=");
 }
 
 std::string argv_parser::of_name() const
 {
-    std::string const keyword { "of=" };
-    std::string of_name;
-
-    for (auto &str: m_argv)
-    {
-        auto pos = str.find(keyword);
-
-        bool const found = (pos == 0);
-
-        if (found)
-        {
-            pos += keyword.length();
-            of_name = str.substr(pos);
-            break;
-        }
-    }
-
-    return of_name;
+    return parse("of=");
 }
 
 size_t argv_parser::bs() const
 {
-    std::string const keyword { "bs=" };
-    std::string bs_str;
-
-    for (auto &str: m_argv)
-    {
-        auto pos = str.find(keyword);
-
-        bool const found = (pos == 0);
-
-        if (found)
-        {
-            pos += keyword.length();
-            bs_str = str.substr(pos);
-            break;
-        }
-    }
-
-    size_t bs { 0 };
+    std::string bs_str = parse("bs=");
+    size_t value { 0 };
     std::stringstream ss { bs_str };
-    ss >> bs;
-
-    return bs;
+    ss >> value;
+    return value;
 }
 
 size_t argv_parser::count() const
 {
-    std::string const keyword { "count=" };
-    std::string count_str;
-
-    for (auto &str: m_argv)
-    {
-        auto pos = str.find(keyword);
-
-        bool const found = (pos == 0);
-
-        if (found)
-        {
-            pos += keyword.length();
-            count_str = str.substr(pos);
-            break;
-        }
-    }
-
-    size_t count { 0 };
-    std::stringstream ss { count_str };
-    ss >> count;
-
-    return count;
+    std::string bs_str = parse("count=");
+    size_t value { 0 };
+    std::stringstream ss { bs_str };
+    ss >> value;
+    return value;
 }
 
 std::string argv_parser::parse(std::string const &keyword) const
