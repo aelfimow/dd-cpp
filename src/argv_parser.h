@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <optional>
 
 class argv_parser
 {
@@ -14,7 +15,7 @@ class argv_parser
 
         std::string if_name() const;
         std::string of_name() const;
-        size_t bs() const;
+        std::optional<size_t> bs() const;
         size_t count() const;
 
     private:

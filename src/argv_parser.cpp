@@ -32,13 +32,25 @@ std::string argv_parser::of_name() const
     return parse("of=");
 }
 
-size_t argv_parser::bs() const
+std::optional<size_t> argv_parser::bs() const
+try
 {
     std::string bs_str = parse("bs=");
+
     size_t value { 0 };
     std::stringstream ss { bs_str };
     ss >> value;
+
+    if (value == 0)
+    {
+        return std::nullopt;
+    }
+
     return value;
+}
+catch (...)
+{
+    return std::nullopt;
 }
 
 size_t argv_parser::count() const

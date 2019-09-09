@@ -6,6 +6,9 @@
 #include "argv_parser.h"
 
 
+static constexpr size_t DefaultBlockSize = 512;
+
+
 int main(int argc, char *argv[])
 try
 {
@@ -13,7 +16,7 @@ try
 
     auto if_name = ap.if_name();
     auto of_name = ap.of_name();
-    auto bs = ap.bs();
+    auto bs = ap.bs().value_or(DefaultBlockSize);
     auto count = ap.count();
 
     std::ifstream infile { if_name, std::ifstream::binary };
