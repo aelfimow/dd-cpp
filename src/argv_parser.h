@@ -16,7 +16,7 @@ class argv_parser
         std::optional<std::string> if_name() const;
         std::optional<std::string> of_name() const;
         std::optional<size_t> bs() const;
-        size_t count() const;
+        std::optional<size_t> count() const;
 
     private:
         std::vector<std::string> m_argv;

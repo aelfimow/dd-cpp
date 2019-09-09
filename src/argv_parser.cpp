@@ -63,13 +63,25 @@ catch (...)
     return std::nullopt;
 }
 
-size_t argv_parser::count() const
+std::optional<size_t> argv_parser::count() const
+try
 {
     std::string bs_str = parse("count=");
     size_t value { 0 };
+
     std::stringstream ss { bs_str };
     ss >> value;
+
+    if (value == 0)
+    {
+        return std::nullopt;
+    }
+
     return value;
+}
+catch (...)
+{
+    return std::nullopt;
 }
 
 std::string argv_parser::parse(std::string const &keyword) const

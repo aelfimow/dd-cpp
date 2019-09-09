@@ -7,6 +7,7 @@
 
 
 static constexpr size_t DefaultBlockSize = 512;
+static constexpr size_t DefaultBlockCount = 1;
 
 
 int main(int argc, char *argv[])
@@ -17,7 +18,7 @@ try
     auto if_name = ap.if_name().value_or("No input file name");
     auto of_name = ap.of_name().value_or("No output file name");
     auto bs = ap.bs().value_or(DefaultBlockSize);
-    auto count = ap.count();
+    auto count = ap.count().value_or(DefaultBlockCount);
 
     std::ifstream infile { if_name, std::ifstream::binary };
 
