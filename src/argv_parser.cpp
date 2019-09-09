@@ -11,11 +11,6 @@ argv_parser::argv_parser(int argc, char *argv[]) :
     {
         m_argv.push_back(argv[i]);
     }
-
-    if (m_argv.size() < 5)
-    {
-        throw std::invalid_argument("Usage: dd-cpp if of bs count");
-    }
 }
 
 argv_parser::~argv_parser()
@@ -25,7 +20,14 @@ argv_parser::~argv_parser()
 std::optional<std::string> argv_parser::if_name() const
 try
 {
-    return parse("if=");
+    auto str = parse("if=");
+
+    if (0 == str.length())
+    {
+        return std::nullopt;
+    }
+
+    return str;
 }
 catch (...)
 {
@@ -35,7 +37,14 @@ catch (...)
 std::optional<std::string> argv_parser::of_name() const
 try
 {
-    return parse("of=");
+    auto str = parse("of=");
+
+    if (0 == str.length())
+    {
+        return std::nullopt;
+    }
+
+    return str;
 }
 catch (...)
 {
