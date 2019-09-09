@@ -22,9 +22,14 @@ argv_parser::~argv_parser()
 {
 }
 
-std::string argv_parser::if_name() const
+std::optional<std::string> argv_parser::if_name() const
+try
 {
     return parse("if=");
+}
+catch (...)
+{
+    return std::nullopt;
 }
 
 std::optional<std::string> argv_parser::of_name() const

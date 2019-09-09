@@ -14,8 +14,8 @@ try
 {
     argv_parser ap { argc, argv };
 
-    auto if_name = ap.if_name();
-    auto of_name = ap.of_name().value_or("");
+    auto if_name = ap.if_name().value_or("No input file name");
+    auto of_name = ap.of_name().value_or("No output file name");
     auto bs = ap.bs().value_or(DefaultBlockSize);
     auto count = ap.count();
 
