@@ -14,7 +14,7 @@ class argv_parser
         ~argv_parser();
 
         std::string if_name() const;
-        std::string of_name() const;
+        std::optional<std::string> of_name() const;
         std::optional<size_t> bs() const;
         size_t count() const;
 

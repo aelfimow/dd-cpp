@@ -27,9 +27,14 @@ std::string argv_parser::if_name() const
     return parse("if=");
 }
 
-std::string argv_parser::of_name() const
+std::optional<std::string> argv_parser::of_name() const
+try
 {
     return parse("of=");
+}
+catch (...)
+{
+    return std::nullopt;
 }
 
 std::optional<size_t> argv_parser::bs() const
