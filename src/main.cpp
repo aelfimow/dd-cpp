@@ -56,14 +56,8 @@ try
         size_t const bytes_read = static_cast<size_t>(gcount);
         bool const is_partial = (bytes_read != buffer.size());
 
-        if (is_partial)
-        {
-            ++partial_blocks_in;
-        }
-        else
-        {
-            ++full_blocks_in;
-        }
+        partial_blocks_in += is_partial ? 1U : 0U;
+        full_blocks_in += is_partial ? 0U : 1U;
 
         outfile.write(buffer.data(), static_cast<std::streamsize>(bytes_read));
 
@@ -72,15 +66,8 @@ try
             throw std::runtime_error("Write error on " + of_name);
         }
 
-        if (is_partial)
-        {
-            ++partial_blocks_out;
-        }
-        else
-        {
-            ++full_blocks_out;
-        }
-
+        partial_blocks_out += is_partial ? 1U : 0U;
+        full_blocks_out += is_partial ? 0U : 1U;
         total_bytes += bytes_read;
 
         if (is_partial)
