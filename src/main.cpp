@@ -37,11 +37,14 @@ try
     std::vector<char> buffer(bs);
 
     size_t total_bytes { 0 };
-    size_t bcount { 0 };
+    size_t full_blocks_in { 0 };
+    size_t partial_blocks_in { 0 };
+    size_t full_blocks_out { 0 };
+    size_t partial_blocks_out { 0 };
 
-    while (bcount < count)
+    while ((full_blocks_in + partial_blocks_in) < count)
     {
-        infile.read(buffer.data(), buffer.size());
+        infile.read(buffer.data(), static_cast<std::streamsize>(buffer.size()));
 
         auto const gcount = infile.gcount();
 
@@ -50,33 +53,56 @@ try
             break;
         }
 
-        size_t bytes_read = static_cast<size_t>(gcount);
+        size_t const bytes_read = static_cast<size_t>(gcount);
+        bool const is_partial = (bytes_read != buffer.size());
 
-        outfile.write(buffer.data(), bytes_read);
+        if (is_partial)
+        {
+            ++partial_blocks_in;
+        }
+        else
+        {
+            ++full_blocks_in;
+        }
+
+        outfile.write(buffer.data(), static_cast<std::streamsize>(bytes_read));
+
+        if (!outfile.good())
+        {
+            throw std::runtime_error("Write error on " + of_name);
+        }
+
+        if (is_partial)
+        {
+            ++partial_blocks_out;
+        }
+        else
+        {
+            ++full_blocks_out;
+        }
 
         total_bytes += bytes_read;
 
-        if (bytes_read != buffer.size())
+        if (is_partial)
         {
             break;
         }
-
-        ++bcount;
     }
 
-    std::cout << "Block size: " << bs << std::endl;
-    std::cout << "Block count: " << bcount << std::endl;
-    std::cout << "Total bytes: " << total_bytes << std::endl;
+    std::cout << full_blocks_in << "+" << partial_blocks_in << " records in\n";
+    std::cout << full_blocks_out << "+" << partial_blocks_out << " records out\n";
+    std::cout << total_bytes << " bytes copied\n";
+    std::cout << "Block size: " << bs << "\n";
 
     return EXIT_SUCCESS;
 }
 catch (std::exception &exc)
 {
-    std::cerr << "Exception: " << exc.what() << std::endl;
+    std::cerr << "Exception: " << exc.what() << "\n";
     return EXIT_FAILURE;
 }
 catch (...)
 {
-    std::cerr << "Error: exception" << std::endl;
+    std::cerr << "Error: exception\n";
     return EXIT_FAILURE;
 }
