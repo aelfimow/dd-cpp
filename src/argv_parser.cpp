@@ -1,115 +1,87 @@
-#include <sstream>
-#include <stdexcept>
-
 #include "argv_parser.h"
 
+#include <charconv>
+#include <system_error>
 
-argv_parser::argv_parser(int argc, char *argv[]) :
-    m_argv { }
+argv_parser::argv_parser(int argc, char *argv[])
+    : m_argv {}
 {
-    for (auto i = 0; i < argc; ++i)
+    if (argc > 0 && argv != nullptr)
     {
-        m_argv.push_back(argv[i]);
+        m_argv.reserve(static_cast<size_t>(argc));
+        for (int i = 0; i < argc; ++i)
+        {
+            if (argv[i] != nullptr)
+            {
+                m_argv.emplace_back(argv[i]);
+            }
+        }
     }
 }
 
-argv_parser::~argv_parser()
+std::optional<std::string_view> argv_parser::if_name() const
 {
+    return parse("if=");
 }
 
-std::optional<std::string> argv_parser::if_name() const
-try
+std::optional<std::string_view> argv_parser::of_name() const
 {
-    auto str = parse("if=");
-
-    if (0 == str.length())
-    {
-        return std::nullopt;
-    }
-
-    return str;
-}
-catch (...)
-{
-    return std::nullopt;
-}
-
-std::optional<std::string> argv_parser::of_name() const
-try
-{
-    auto str = parse("of=");
-
-    if (0 == str.length())
-    {
-        return std::nullopt;
-    }
-
-    return str;
-}
-catch (...)
-{
-    return std::nullopt;
+    return parse("of=");
 }
 
 std::optional<size_t> argv_parser::bs() const
-try
 {
-    std::string bs_str = parse("bs=");
-
-    size_t value { 0 };
-    std::stringstream ss { bs_str };
-    ss >> value;
-
-    if (value == 0)
+    auto const val = parse("bs=");
+    if (!val)
     {
         return std::nullopt;
     }
-
-    return value;
-}
-catch (...)
-{
-    return std::nullopt;
+    return parse_positive_size(*val);
 }
 
 std::optional<size_t> argv_parser::count() const
-try
 {
-    std::string bs_str = parse("count=");
+    auto const val = parse("count=");
+    if (!val)
+    {
+        return std::nullopt;
+    }
+    return parse_positive_size(*val);
+}
+
+std::optional<std::string_view> argv_parser::parse(std::string_view keyword) const
+{
+    for (auto const &arg : m_argv)
+    {
+        std::string_view sv { arg };
+        if (sv.substr(0, keyword.size()) == keyword)
+        {
+            auto const value = sv.substr(keyword.size());
+            if (!value.empty())
+            {
+                return value;
+            }
+            return std::nullopt;
+        }
+    }
+
+    return std::nullopt;
+}
+
+std::optional<size_t> argv_parser::parse_positive_size(std::string_view sv)
+{
+    if (sv.empty())
+    {
+        return std::nullopt;
+    }
+
     size_t value { 0 };
+    auto const [ptr, ec] = std::from_chars(sv.data(), sv.data() + sv.size(), value);
 
-    std::stringstream ss { bs_str };
-    ss >> value;
-
-    if (value == 0)
+    if (ec != std::errc{} || ptr != sv.data() + sv.size() || value == 0)
     {
         return std::nullopt;
     }
 
     return value;
-}
-catch (...)
-{
-    return std::nullopt;
-}
-
-std::string argv_parser::parse(std::string const &keyword) const
-{
-    std::string parsed_str;
-
-    for (auto const &str: m_argv)
-    {
-        auto pos = str.find(keyword);
-
-        bool const found = (pos == 0);
-
-        if (found)
-        {
-            pos += keyword.length();
-            parsed_str = str.substr(pos);
-            break;
-        }
-    }
-
-    return parsed_str;
 }
