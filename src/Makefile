@@ -1,6 +1,6 @@
 CXX ?= g++
 
-CXXFLAGS ?= -O3 -Wall -Wextra -pedantic -Weffc++ -std=c++17
+CXXFLAGS ?= -O3 -Wall -Wextra -pedantic -Weffc++ -std=c++20
 
 TARGET := dd-cpp.exe
 
