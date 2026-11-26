@@ -1,37 +1,46 @@
 # dd-cpp
 
-A simple command-line utility implemented in modern C++ for block-wise file copying — inspired by the Unix/Linux `dd` tool.
+A lightweight command-line utility implemented in modern C++20 for block-wise file copying — inspired by the Unix/Linux `dd` tool.
 
 ## Current Features
 
-* **Block-wise Copying:** Reads binary data from an input file and writes it block by block to an output file.
-
+* **Block-wise Binary Copying:** Reads binary data from an input file and writes it block by block to an output file.
 * **Configurable Block Size (`bs=`):** Sets the buffer/block size in bytes (default: `512` bytes).
-
 * **Configurable Block Count (`count=`):** Sets the maximum number of blocks to copy (default: `1` block).
-
-* **Partial Block Handling:** Reliably detects end-of-file (`EOF`) as well as partial blocks and terminates the copy loop cleanly.
-
+* **Strict Argument Parsing (`std::from_chars`):** Validates positive numeric arguments without locale overhead or partial-string acceptance (e.g., rejecting `123abc` or `0`).
+* **Partial Block & EOF Handling:** Reliably detects end-of-file (`EOF`) as well as partial blocks and terminates the copy loop cleanly.
 * **Status Output (`dd`-style):** Prints the number of full and partial blocks read/written (`records in` / `records out`), total bytes copied, and the block size used upon completion.
-
-* **Error Handling:** Validates stream states when opening and writing files, reporting errors via exceptions.
+* **Explicit Error Handling:** Immediately reports missing required parameters (`if=`, `of=`), file open failures, and write errors via exceptions.
 
 ## Project Structure
 
-* `main.cpp` – Entry point, file stream handling, copy loop, and status output
-
-* `argv_parser.h` / `argv_parser.cpp` – Encapsulation and parsing of command-line arguments (`if=`, `of=`, `bs=`, `count=`)
+* `main.cpp` – Entry point, argument validation, file stream handling, copy loop, and status output
+* `argv_parser.h` / `argv_parser.cpp` – Encapsulation and parsing of command-line arguments (`if=`, `of=`, `bs=`, `count=`) using `std::string_view`, `std::optional`, and `std::from_chars`
+* `Makefile` – Incremental build configuration with automatic header dependency tracking (`-MMD -MP`) and `clean` target
 
 ## Requirements
 
-* A C++17-compatible compiler (for `std::optional`), e.g., `g++` or `clang++`
+* A C++20-compatible compiler (e.g., `g++` 12+ or `clang++`)
+* GNU `make` (optional, for building via the provided `Makefile`)
 
 ## Building
 
-Compile directly using `g++` or `clang++`:
+### Using Make
 
 ```bash
-g++ -std=c++17 -Wall -Wextra -pedantic main.cpp argv_parser.cpp -o dd-cpp
+make
+```
+
+To remove build artifacts (`.o`, `.d`, and the executable):
+
+```bash
+make clean
+```
+
+### Manual Compilation
+
+```bash
+g++ -O3 -std=c++20 -Wall -Wextra -pedantic -Weffc++ main.cpp argv_parser.cpp -o dd-cpp
 ```
 
 ## Usage
@@ -69,9 +78,6 @@ Block size: 4096
 ## Planned Enhancements / Roadmap
 
 * Copy until end-of-file (`EOF`) when `count=` is omitted
-
 * Support `stdin` / `stdout` as default I/O streams when `if=` or `of=` are omitted
-
 * Support size suffixes for `bs=` (e.g., `K`, `M`, `G`)
-
 * Additional `dd` options such as `skip=` and `seek=`
