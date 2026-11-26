@@ -15,19 +15,19 @@ try
 {
     argv_parser ap { argc, argv };
 
-    auto if_name = ap.if_name().value_or("No input file name");
-    auto of_name = ap.of_name().value_or("No output file name");
+    auto if_name = std::string(ap.if_name().value_or("No input file name"));
+    auto of_name = std::string(ap.of_name().value_or("No output file name"));
     auto bs = ap.bs().value_or(DefaultBlockSize);
     auto count = ap.count().value_or(DefaultBlockCount);
 
-    std::ifstream infile { if_name, std::ifstream::binary };
+    std::ifstream infile(if_name, std::ifstream::binary);
 
     if (!infile.good())
     {
         throw std::runtime_error(if_name + " is not good");
     }
 
-    std::ofstream outfile { of_name, std::ofstream::binary };
+    std::ofstream outfile(of_name, std::ofstream::binary);
 
     if (!outfile.good())
     {
